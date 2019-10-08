@@ -1,0 +1,16 @@
+
+# logging config here as a reminder as to how to override logback from cmd line
+# ie -Dlogging.level.org.springframework=DEBUG
+logging:
+  level:
+    uk.gov.ons.ctp: INFO
+    org.springframework: INFO
+  profile: DEV
+  useJson: true
+
+case-service-settings:
+  case-by-id-query-path: /cases/{case-id}
+  case-by-uprn-query-path: /cases/uprn/{uprn}
+  case-by-case-reference-query-path: /cases/ref/{reference}
+  
+

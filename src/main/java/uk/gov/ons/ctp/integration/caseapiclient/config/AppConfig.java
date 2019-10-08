@@ -11,8 +11,6 @@ import org.springframework.retry.annotation.EnableRetry;
 @ConfigurationProperties
 @Data
 public class AppConfig {
-  private ReportSettings reportSettings;
-  private AddressIndexSettings addressIndexSettings;
   private CaseServiceSettings caseServiceSettings;
   private Logging logging;
 }

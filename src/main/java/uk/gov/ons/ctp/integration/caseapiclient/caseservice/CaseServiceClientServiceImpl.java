@@ -5,7 +5,6 @@ import com.godaddy.logging.LoggerFactory;
 import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -13,15 +12,15 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import uk.gov.ons.ctp.common.rest.RestClient;
 import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.CaseContainerDTO;
-import uk.gov.ons.ctp.integration.caseapiclient.config.AppConfig;
 
 /** This class is responsible for communications with the Case Service. */
 @Service
 @Validated
 public class CaseServiceClientServiceImpl {
   private static final Logger log = LoggerFactory.getLogger(CaseServiceClientServiceImpl.class);
-
-  @Autowired private AppConfig appConfig;
+  private static final String CASE_BY_ID_QUERY_PATH = "/cases/{case-id}";
+  private static final String CASE_BY_UPRN_QUERY_PATH = "/cases/uprn/{uprn}";
+  private static final String CASE_BY_CASE_REFERENCE_QUERY_PATH = "/cases/ref/{reference}";
 
   @Inject
   @Qualifier("caseServiceClient")
@@ -36,10 +35,9 @@ public class CaseServiceClientServiceImpl {
     queryParams.add("caseEvents", Boolean.toString(listCaseEvents));
 
     // Ask Case Service to find case details
-    String path = appConfig.getCaseServiceSettings().getCaseByIdQueryPath();
     CaseContainerDTO caseDetails =
         caseServiceClient.getResource(
-            path, CaseContainerDTO.class, null, queryParams, caseId.toString());
+            CASE_BY_ID_QUERY_PATH, CaseContainerDTO.class, null, queryParams, caseId.toString());
     log.with("caseId", caseId).debug("getCaseById() found case details for case ID");
 
     return caseDetails;
@@ -54,10 +52,13 @@ public class CaseServiceClientServiceImpl {
     queryParams.add("caseEvents", Boolean.toString(listCaseEvents));
 
     // Ask Case Service to find case details
-    String path = appConfig.getCaseServiceSettings().getCaseByUprnQueryPath();
     List<CaseContainerDTO> cases =
         caseServiceClient.getResources(
-            path, CaseContainerDTO[].class, null, queryParams, Long.toString(uprn));
+            CASE_BY_UPRN_QUERY_PATH,
+            CaseContainerDTO[].class,
+            null,
+            queryParams,
+            Long.toString(uprn));
 
     log.with("uprn", uprn).debug("getCaseByUprn() found case details by Uprn");
 
@@ -74,10 +75,13 @@ public class CaseServiceClientServiceImpl {
     queryParams.add("caseEvents", Boolean.toString(listCaseEvents));
 
     // Ask Case Service to find case details
-    String path = appConfig.getCaseServiceSettings().getCaseByCaseReferenceQueryPath();
     CaseContainerDTO caseDetails =
         caseServiceClient.getResource(
-            path, CaseContainerDTO.class, null, queryParams, caseReference);
+            CASE_BY_CASE_REFERENCE_QUERY_PATH,
+            CaseContainerDTO.class,
+            null,
+            queryParams,
+            caseReference);
 
     log.with("caseReference", caseReference)
         .debug("getCaseByCaseReference() found case details by case reference");

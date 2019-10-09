@@ -10,7 +10,7 @@ import org.springframework.retry.annotation.EnableRetry;
 @Configuration
 @ConfigurationProperties
 @Data
-public class AppConfig {
+public class CaseApiAppConfig {
   private CaseServiceSettings caseServiceSettings;
   private Logging logging;
 }

@@ -34,7 +34,8 @@ public class CaseServiceClientServiceImplTest {
   @Mock RestClient restClient;
 
   @InjectMocks
-  CaseServiceClientServiceImpl caseServiceClientService = new CaseServiceClientServiceImpl();
+  CaseServiceClientServiceImpl caseServiceClientService =
+      new CaseServiceClientServiceImpl(restClient);
 
   @Captor ArgumentCaptor<MultiValueMap<String, String>> queryParamsCaptor;
 

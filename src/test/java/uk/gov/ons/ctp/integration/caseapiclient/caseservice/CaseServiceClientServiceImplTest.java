@@ -26,10 +26,6 @@ import uk.gov.ons.ctp.integration.contactcentresvc.representation.model.UniquePr
  * calls and returns dummy responses to represent what would be returned by the case service.
  */
 public class CaseServiceClientServiceImplTest {
-  //  @Mock CaseApiAppConfig appConfig = new CaseApiAppConfig();
-  private static final String CASE_BY_ID_QUERY_PATH = "/cases/{case-id}";
-  private static final String CASE_BY_UPRN_QUERY_PATH = "/cases/uprn/{uprn}";
-  private static final String CASE_BY_CASE_REFERENCE_QUERY_PATH = "/cases/ref/{reference}";
 
   @Mock RestClient restClient;
 
@@ -42,26 +38,19 @@ public class CaseServiceClientServiceImplTest {
   @Before
   public void initMocks() {
     MockitoAnnotations.initMocks(this);
-
-    // Mock the case service settings
-    //		CaseServiceSettings caseServiceSettings = new CaseServiceSettings();
-    //		caseServiceSettings.setCaseByIdQueryPath("/cases/{uuid}");
-    //		caseServiceSettings.setCaseByUprnQueryPath("/cases/uprn/{uprn}");
-    //		caseServiceSettings.setCaseByCaseReferenceQueryPath("/cases/ref/{reference}");
-    //		Mockito.when(appConfig.getCaseServiceSettings()).thenReturn(caseServiceSettings);
   }
 
   @Test
   public void testGetCaseById_withCaseEvents() throws Exception {
-    //		doTestGetCaseById(true);
+    doTestGetCaseById(true);
   }
 
   @Test
   public void testGetCaseById_withNoCaseEvents() throws Exception {
-    //		doTestGetCaseById(false);
+    doTestGetCaseById(false);
   }
 
-  private void mvn(boolean requireCaseEvents) throws Exception {
+  private void doTestGetCaseById(boolean requireCaseEvents) throws Exception {
     UUID testUuid = UUID.fromString("b7565b5e-1396-4965-91a2-918c0d3642ed");
 
     // Build results to be returned by the case service
@@ -69,7 +58,7 @@ public class CaseServiceClientServiceImplTest {
         FixtureHelper.loadClassFixtures(CaseContainerDTO[].class).get(0);
     Mockito.when(
             restClient.getResource(
-                eq("/cases/{uuid}"),
+                eq("/cases/{case-id}"),
                 eq(CaseContainerDTO.class),
                 any(),
                 any(),

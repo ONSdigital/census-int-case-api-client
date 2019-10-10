@@ -8,4 +8,5 @@ import lombok.Data;
 public class QuestionnaireIdDTO {
 
   private String questionnaireId;
+  private boolean active;
 }

@@ -56,6 +56,8 @@ public class CaseContainerDTO {
 
   private UUID id;
 
+  private UUID collectionExerciseId;
+
   private String caseType;
 
   private String region;

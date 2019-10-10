@@ -8,6 +8,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import uk.gov.ons.ctp.common.rest.RestClient;
 import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.CaseContainerDTO;
+import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.QuestionnaireIdDTO;
 
 /** This class is responsible for communications with the Case Service. */
 public class CaseServiceClientServiceImpl {
@@ -15,6 +16,7 @@ public class CaseServiceClientServiceImpl {
   private static final String CASE_BY_ID_QUERY_PATH = "/cases/{case-id}";
   private static final String CASE_BY_UPRN_QUERY_PATH = "/cases/uprn/{uprn}";
   private static final String CASE_BY_CASE_REFERENCE_QUERY_PATH = "/cases/ref/{reference}";
+  private static final String CASE_QUESTIONNAIRE_ID_QUERY_PATH = "/cases/ccs/{caseId}/qid";
 
   private RestClient caseServiceClient;
 
@@ -84,5 +86,24 @@ public class CaseServiceClientServiceImpl {
         .debug("getCaseByCaseReference() found case details by case reference");
 
     return caseDetails;
+  }
+
+  public QuestionnaireIdDTO getQidByCaseId(UUID caseId) {
+    log.with("caseId", caseId)
+        .debug("getQidByCaseId() calling Case Service to find questionnaire id by case ID");
+
+    QuestionnaireIdDTO questionnaireId = null;
+
+    questionnaireId =
+        caseServiceClient.getResource(
+            CASE_QUESTIONNAIRE_ID_QUERY_PATH,
+            QuestionnaireIdDTO.class,
+            null,
+            null,
+            caseId.toString());
+    log.with("questionnaireId", questionnaireId)
+        .debug("getQidByCaseId() found questionnaire id for case ID");
+
+    return questionnaireId;
   }
 }

@@ -19,6 +19,7 @@ import org.springframework.util.MultiValueMap;
 import uk.gov.ons.ctp.common.FixtureHelper;
 import uk.gov.ons.ctp.common.rest.RestClient;
 import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.CaseContainerDTO;
+import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.QuestionnaireIdDTO;
 import uk.gov.ons.ctp.integration.contactcentresvc.representation.model.UniquePropertyReferenceNumber;
 
 /**
@@ -48,6 +49,32 @@ public class CaseServiceClientServiceImplTest {
   @Test
   public void testGetCaseById_withNoCaseEvents() throws Exception {
     doTestGetCaseById(false);
+  }
+
+  @Test
+  public void testGetQidByCaseId() throws Exception {
+    doTestGetQidByCaseId();
+  }
+
+  private void doTestGetQidByCaseId() throws Exception {
+    UUID testUuid = UUID.fromString("b7565b5e-1396-4965-91a2-918c0d3642ed");
+
+    // Build results to be returned by the case service
+    QuestionnaireIdDTO resultsFromCaseService =
+        FixtureHelper.loadClassFixtures(QuestionnaireIdDTO[].class).get(0);
+    Mockito.when(
+            restClient.getResource(
+                eq("/cases/ccs/{caseId}/qid"),
+                eq(QuestionnaireIdDTO.class),
+                any(),
+                any(),
+                eq(testUuid.toString())))
+        .thenReturn(resultsFromCaseService);
+
+    // Run the request
+    QuestionnaireIdDTO results = caseServiceClientService.getQidByCaseId(testUuid);
+
+    assertEquals("1110000009", results.getQuestionnaireId());
   }
 
   private void doTestGetCaseById(boolean requireCaseEvents) throws Exception {

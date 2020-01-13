@@ -14,11 +14,16 @@ before_install:
   - export TZ=Europe/London
 
 script:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - mvn test -B
   - git config --global user.email "travis@travis-ci.org";
   - git config --global user.name "Travis CI";
-  - mvn -B -Dusername=$GITHUB_API_KEY release:prepare;
-  - mvn -B release:perform;
+  - if [ "$BRANCH" == "master" ]; then
+      mvn -B -Dusername=$GITHUB_API_KEY release:prepare;
+      mvn -B release:perform;
+    else
+      mvn deploy
+    fi
 
 notifications:
   #slack:

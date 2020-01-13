@@ -15,13 +15,10 @@ before_install:
 
 script:
   - mvn test -B
-  # Only release on master builds
-  - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-    git config --global user.email "travis@travis-ci.org";
-    git config --global user.name "Travis CI";
-    mvn -B -Dusername=$GITHUB_API_KEY release:prepare;
-    mvn -B release:perform;
-    fi
+  - git config --global user.email "travis@travis-ci.org";
+  - git config --global user.name "Travis CI";
+  - mvn -B -Dusername=$GITHUB_API_KEY release:prepare;
+  - mvn -B release:perform;
 
 notifications:
   #slack:
@@ -34,6 +31,3 @@ cache:
   directories:
   - $HOME/.m2
 
-branches:
-    only:
-        - master

@@ -14,9 +14,9 @@
                     <snapshots>
                         <enabled>false</enabled>
                     </snapshots>
-                    <id>maven-central</id>
+                    <id>jcenter</id>
                     <name>Central Repository</name>
-                    <url>https://repo.maven.apache.org/maven2</url>
+                    <url>http://artifactory-sdc.onsdigital.uk/artifactory/jcenter</url>
                 </repository>
                 <repository>
                     <snapshots>

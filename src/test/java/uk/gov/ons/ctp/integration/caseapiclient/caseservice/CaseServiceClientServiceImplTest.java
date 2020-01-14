@@ -21,6 +21,7 @@ import uk.gov.ons.ctp.common.model.UniquePropertyReferenceNumber;
 import uk.gov.ons.ctp.common.rest.RestClient;
 import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.CaseContainerDTO;
 import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.QuestionnaireIdDTO;
+import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.SingleUseQuestionnaireIdDTO;
 
 /**
  * This class contains unit tests for the CaseServiceClientServiceImpl class. It mocks out the Rest
@@ -52,11 +53,11 @@ public class CaseServiceClientServiceImplTest {
   }
 
   @Test
-  public void testGetQidByCaseId() throws Exception {
-    doTestGetQidByCaseId();
+  public void testGetReusableQid() throws Exception {
+    doTestGetReusableQid();
   }
 
-  private void doTestGetQidByCaseId() throws Exception {
+  private void doTestGetReusableQid() throws Exception {
     UUID testUuid = UUID.fromString("b7565b5e-1396-4965-91a2-918c0d3642ed");
 
     // Build results to be returned by the case service
@@ -72,9 +73,32 @@ public class CaseServiceClientServiceImplTest {
         .thenReturn(resultsFromCaseService);
 
     // Run the request
-    QuestionnaireIdDTO results = caseServiceClientService.getQidByCaseId(testUuid);
+    QuestionnaireIdDTO results = caseServiceClientService.getReusableQuestionnaireId(testUuid);
 
     assertEquals("1110000009", results.getQuestionnaireId());
+  }
+
+  @Test
+  public void doTestGetSingleUseQid() throws Exception {
+    UUID testUuid = UUID.fromString("b7565b5e-1396-4965-91a2-918c0d3642ed");
+
+    // Build results to be returned by the case service
+    SingleUseQuestionnaireIdDTO resultsFromCaseService =
+        FixtureHelper.loadClassFixtures(SingleUseQuestionnaireIdDTO[].class).get(0);
+    Mockito.when(
+            restClient.getResource(
+                eq("/cases/{caseId}/qid"),
+                eq(SingleUseQuestionnaireIdDTO.class),
+                any(),
+                any(),
+                eq(testUuid.toString())))
+        .thenReturn(resultsFromCaseService);
+
+    // Run the request
+    SingleUseQuestionnaireIdDTO results =
+        caseServiceClientService.getSingleUseQuestionnaireId(testUuid, true, UUID.randomUUID());
+
+    assertEquals("8823938628", results.getQuestionnaireId());
   }
 
   private void doTestGetCaseById(boolean requireCaseEvents) throws Exception {

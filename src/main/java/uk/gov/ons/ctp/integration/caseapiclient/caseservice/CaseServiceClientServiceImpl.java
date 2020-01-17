@@ -9,6 +9,7 @@ import org.springframework.util.MultiValueMap;
 import uk.gov.ons.ctp.common.rest.RestClient;
 import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.CaseContainerDTO;
 import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.QuestionnaireIdDTO;
+import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.SingleUseQuestionnaireIdDTO;
 
 /** This class is responsible for communications with the Case Service. */
 public class CaseServiceClientServiceImpl {
@@ -16,7 +17,8 @@ public class CaseServiceClientServiceImpl {
   private static final String CASE_BY_ID_QUERY_PATH = "/cases/{case-id}";
   private static final String CASE_BY_UPRN_QUERY_PATH = "/cases/uprn/{uprn}";
   private static final String CASE_BY_CASE_REFERENCE_QUERY_PATH = "/cases/ref/{reference}";
-  private static final String CASE_QUESTIONNAIRE_ID_QUERY_PATH = "/cases/ccs/{caseId}/qid";
+  private static final String CASE_GET_REUSABLE_QUESTIONNAIRE_ID_PATH = "/cases/ccs/{caseId}/qid";
+  private static final String CASE_CREATE_SINGLE_USE_QUESTIONNAIRE_ID_PATH = "/cases/{caseId}/qid";
 
   private RestClient caseServiceClient;
 
@@ -88,22 +90,57 @@ public class CaseServiceClientServiceImpl {
     return caseDetails;
   }
 
-  public QuestionnaireIdDTO getQidByCaseId(UUID caseId) {
+  public QuestionnaireIdDTO getReusableQuestionnaireId(UUID caseId) {
     log.with("caseId", caseId)
-        .debug("getQidByCaseId() calling Case Service to find questionnaire id by case ID");
+        .debug(
+            "getReusableQuestionnaireId() calling Case Service to find questionnaire id "
+                + "by case ID");
 
     QuestionnaireIdDTO questionnaireId = null;
 
     questionnaireId =
         caseServiceClient.getResource(
-            CASE_QUESTIONNAIRE_ID_QUERY_PATH,
+            CASE_GET_REUSABLE_QUESTIONNAIRE_ID_PATH,
             QuestionnaireIdDTO.class,
             null,
             null,
             caseId.toString());
     log.with("questionnaireId", questionnaireId)
-        .debug("getQidByCaseId() found questionnaire id for case ID");
+        .debug("getReusableQuestionnaireId() found questionnaire id for case ID");
 
     return questionnaireId;
+  }
+
+  public SingleUseQuestionnaireIdDTO getSingleUseQuestionnaireId(
+      UUID caseId, boolean individual, UUID individualCaseId) {
+    log.with("caseId", caseId)
+        .with("individual", individual)
+        .with("individualCaseId", individualCaseId)
+        .debug("getNewQuestionnaireIdForCase() calling Case Service to get new questionnaire ID");
+
+    // Build map for query params
+    MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+    if (individual) {
+      queryParams.add("individual", "true");
+      if (individualCaseId != null) {
+        queryParams.add("individualCaseId", individualCaseId.toString());
+      }
+    }
+
+    // Ask Case Service to find case details
+    SingleUseQuestionnaireIdDTO newQuestionnaireId =
+        caseServiceClient.getResource(
+            CASE_CREATE_SINGLE_USE_QUESTIONNAIRE_ID_PATH,
+            SingleUseQuestionnaireIdDTO.class,
+            null,
+            queryParams,
+            caseId.toString());
+
+    log.with("caseId", caseId)
+        .with("questionnaireId", newQuestionnaireId.getQuestionnaireId())
+        .with("uac", newQuestionnaireId.getUac())
+        .debug("getNewQuestionnaireIdForCase() generated new questionnaireId");
+
+    return newQuestionnaireId;
   }
 }

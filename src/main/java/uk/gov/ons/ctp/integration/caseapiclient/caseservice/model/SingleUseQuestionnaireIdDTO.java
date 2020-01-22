@@ -1,7 +1,6 @@
 package uk.gov.ons.ctp.integration.caseapiclient.caseservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.UUID;
 import lombok.Data;
 
 /** This class holds data for a newly allocated questionnaire ID. */
@@ -10,5 +9,5 @@ import lombok.Data;
 public class SingleUseQuestionnaireIdDTO {
 
   private String questionnaireId;
-  private UUID uac;
+  private String uac;
 }

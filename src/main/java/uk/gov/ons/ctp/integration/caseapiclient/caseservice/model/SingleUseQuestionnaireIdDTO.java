@@ -10,5 +10,5 @@ import lombok.Data;
 public class SingleUseQuestionnaireIdDTO {
 
   private String questionnaireId;
-  private UUID uac;
+  private String uac;
 }

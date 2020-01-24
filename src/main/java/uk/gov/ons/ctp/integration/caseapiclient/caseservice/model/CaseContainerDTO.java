@@ -50,8 +50,6 @@ public class CaseContainerDTO {
 
   private String lad;
 
-  private String state;
-
   private List<EventDTO> caseEvents;
 
   private UUID id;

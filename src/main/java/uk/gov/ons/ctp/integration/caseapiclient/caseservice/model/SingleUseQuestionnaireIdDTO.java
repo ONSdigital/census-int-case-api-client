@@ -10,4 +10,6 @@ public class SingleUseQuestionnaireIdDTO {
 
   private String questionnaireId;
   private String uac;
+  private String formType;
+  private String questionnaireType;
 }

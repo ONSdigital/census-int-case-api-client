@@ -138,7 +138,8 @@ public class CaseServiceClientServiceImpl {
 
     log.with("caseId", caseId)
         .with("questionnaireId", newQuestionnaireId.getQuestionnaireId())
-        .with("uac", newQuestionnaireId.getUac())
+        .with("formType", newQuestionnaireId.getFormType())
+        .with("questionnaireType", newQuestionnaireId.getQuestionnaireId())
         .debug("getNewQuestionnaireIdForCase() generated new questionnaireId");
 
     return newQuestionnaireId;

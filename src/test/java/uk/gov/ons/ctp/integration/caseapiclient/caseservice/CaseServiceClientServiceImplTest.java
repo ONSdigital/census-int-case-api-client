@@ -98,7 +98,10 @@ public class CaseServiceClientServiceImplTest {
     SingleUseQuestionnaireIdDTO results =
         caseServiceClientService.getSingleUseQuestionnaireId(testUuid, true, UUID.randomUUID());
 
-    assertEquals("8823938628", results.getQuestionnaireId());
+    assertEquals(resultsFromCaseService.getQuestionnaireId(), results.getQuestionnaireId());
+    assertEquals(resultsFromCaseService.getUac(), results.getUac());
+    assertEquals(resultsFromCaseService.getFormType(), results.getFormType());
+    assertEquals(resultsFromCaseService.getQuestionnaireType(), results.getQuestionnaireType());
   }
 
   private void doTestGetCaseById(boolean requireCaseEvents) throws Exception {

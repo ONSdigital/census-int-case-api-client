@@ -61,4 +61,6 @@ public class CaseContainerDTO {
   private String region;
 
   private String surveyType;
+
+  private boolean handDelivery;
 }

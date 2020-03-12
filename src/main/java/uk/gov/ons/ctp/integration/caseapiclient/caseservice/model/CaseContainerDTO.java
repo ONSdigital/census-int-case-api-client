@@ -58,6 +58,8 @@ public class CaseContainerDTO {
 
   private String caseType;
 
+  private String addressType;
+
   private String region;
 
   private String surveyType;

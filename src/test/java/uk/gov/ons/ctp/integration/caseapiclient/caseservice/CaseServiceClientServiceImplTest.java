@@ -75,7 +75,9 @@ public class CaseServiceClientServiceImplTest {
     // Run the request
     QuestionnaireIdDTO results = caseServiceClientService.getReusableQuestionnaireId(testUuid);
 
-    assertEquals("1110000009", results.getQuestionnaireId());
+    assertEquals(resultsFromCaseService.getQuestionnaireId(), results.getQuestionnaireId());
+    assertEquals(resultsFromCaseService.getFormType(), results.getFormType());
+    assertEquals(resultsFromCaseService.isActive(), results.isActive());
   }
 
   @Test

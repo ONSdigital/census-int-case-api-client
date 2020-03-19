@@ -9,4 +9,5 @@ public class QuestionnaireIdDTO {
 
   private String questionnaireId;
   private boolean active;
+  private String formType;
 }

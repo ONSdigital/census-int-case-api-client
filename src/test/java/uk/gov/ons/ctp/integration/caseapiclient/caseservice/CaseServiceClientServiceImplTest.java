@@ -1,12 +1,17 @@
 package uk.gov.ons.ctp.integration.caseapiclient.caseservice;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -28,6 +33,11 @@ import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.SingleUseQuest
  * calls and returns dummy responses to represent what would be returned by the case service.
  */
 public class CaseServiceClientServiceImplTest {
+  private static final String ID_0 = "b7565b5e-1396-4965-91a2-918c0d3642ed";
+  private static final String ID_1 = "b7565b5e-2222-2222-2222-918c0d3642ed";
+  private static final String ID_2 = "603d440b-18a0-41a0-992a-e12ea858ed35";
+
+  private static final List<String> IDS = Arrays.asList(ID_0, ID_1, ID_2);
 
   @Mock RestClient restClient;
 
@@ -43,13 +53,37 @@ public class CaseServiceClientServiceImplTest {
   }
 
   @Test
-  public void testGetCaseById_withCaseEvents() throws Exception {
-    doTestGetCaseById(true);
+  public void testGetCaseById_withCaseEvents() {
+    doTestGetCaseById(true, 0);
   }
 
   @Test
-  public void testGetCaseById_withNoCaseEvents() throws Exception {
-    doTestGetCaseById(false);
+  public void testGetCaseById_withNoCaseEvents() {
+    doTestGetCaseById(false, 0);
+  }
+
+  @Test
+  public void shouldFindNonSecureEstablishment() {
+    CaseContainerDTO result = doTestGetCaseById(true, 0);
+    assertFalse(result.isSecureEstablishment());
+  }
+
+  @Test
+  public void shouldFindSecureEstablishment() {
+    CaseContainerDTO result = doTestGetCaseById(true, 2);
+    assertTrue(result.isSecureEstablishment());
+  }
+
+  @Test
+  public void shouldFindEstablishmentUprn() {
+    CaseContainerDTO result = doTestGetCaseById(true, 2);
+    assertEquals("334111111111", result.getEstabUprn());
+  }
+
+  @Test
+  public void shouldNotFindEstablishmentUprn() {
+    CaseContainerDTO result = doTestGetCaseById(true, 0);
+    assertNull(result.getEstabUprn());
   }
 
   @Test
@@ -106,12 +140,13 @@ public class CaseServiceClientServiceImplTest {
     assertEquals(resultsFromCaseService.getQuestionnaireType(), results.getQuestionnaireType());
   }
 
-  private void doTestGetCaseById(boolean requireCaseEvents) throws Exception {
-    UUID testUuid = UUID.fromString("b7565b5e-1396-4965-91a2-918c0d3642ed");
+  @SneakyThrows
+  private CaseContainerDTO doTestGetCaseById(boolean requireCaseEvents, int index) {
+    UUID testUuid = UUID.fromString(IDS.get(index));
 
     // Build results to be returned by the case service
     CaseContainerDTO resultsFromCaseService =
-        FixtureHelper.loadClassFixtures(CaseContainerDTO[].class).get(0);
+        FixtureHelper.loadClassFixtures(CaseContainerDTO[].class).get(index);
     Mockito.when(
             restClient.getResource(
                 eq("/cases/{case-id}"),
@@ -129,6 +164,7 @@ public class CaseServiceClientServiceImplTest {
     assertNotNull(
         results.getCaseEvents()); // Response will have events as not removed at this level
     verifyRequestUsedCaseEventsQueryParam(requireCaseEvents);
+    return results;
   }
 
   @Test

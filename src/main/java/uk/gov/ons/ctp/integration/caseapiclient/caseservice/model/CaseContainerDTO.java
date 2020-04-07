@@ -20,6 +20,8 @@ public class CaseContainerDTO {
 
   private String uprn;
 
+  private String estabUprn;
+
   private Date createdDateTime;
 
   private String addressLine1;
@@ -65,4 +67,6 @@ public class CaseContainerDTO {
   private String surveyType;
 
   private boolean handDelivery;
+
+  private boolean secureEstablishment;
 }

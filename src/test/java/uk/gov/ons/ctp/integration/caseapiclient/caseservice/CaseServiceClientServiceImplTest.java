@@ -12,17 +12,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import lombok.SneakyThrows;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.util.MultiValueMap;
 import uk.gov.ons.ctp.common.FixtureHelper;
-import uk.gov.ons.ctp.common.model.UniquePropertyReferenceNumber;
+import uk.gov.ons.ctp.common.domain.UniquePropertyReferenceNumber;
 import uk.gov.ons.ctp.common.rest.RestClient;
 import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.CaseContainerDTO;
 import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.QuestionnaireIdDTO;
@@ -32,6 +32,7 @@ import uk.gov.ons.ctp.integration.caseapiclient.caseservice.model.SingleUseQuest
  * This class contains unit tests for the CaseServiceClientServiceImpl class. It mocks out the Rest
  * calls and returns dummy responses to represent what would be returned by the case service.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class CaseServiceClientServiceImplTest {
   private static final String ID_0 = "b7565b5e-1396-4965-91a2-918c0d3642ed";
   private static final String ID_1 = "b7565b5e-2222-2222-2222-918c0d3642ed";
@@ -46,11 +47,6 @@ public class CaseServiceClientServiceImplTest {
       new CaseServiceClientServiceImpl(restClient);
 
   @Captor ArgumentCaptor<MultiValueMap<String, String>> queryParamsCaptor;
-
-  @Before
-  public void initMocks() {
-    MockitoAnnotations.initMocks(this);
-  }
 
   @Test
   public void testGetCaseById_withCaseEvents() {

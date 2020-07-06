@@ -77,14 +77,14 @@
     <dependency>
       <groupId>uk.gov.ons.ctp.integration.common</groupId>
       <artifactId>test-framework</artifactId>
-      <version>0.0.14</version>
+      <version>0.0.17</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>uk.gov.ons.ctp.integration.common</groupId>
       <artifactId>event-publisher</artifactId>
-      <version>0.0.35</version>
+      <version>0.0.39</version>
     </dependency>
 
   </dependencies>

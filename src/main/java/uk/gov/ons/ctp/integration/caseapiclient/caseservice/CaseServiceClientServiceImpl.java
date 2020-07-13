@@ -51,6 +51,7 @@ public class CaseServiceClientServiceImpl {
     // Build map for query params
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
     queryParams.add("caseEvents", Boolean.toString(listCaseEvents));
+    queryParams.add("validAddressOnly", Boolean.TRUE.toString());
 
     // Ask Case Service to find case details
     List<CaseContainerDTO> cases =

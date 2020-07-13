@@ -206,8 +206,9 @@ public class CaseServiceClientServiceImplTest {
     Mockito.verify(restClient)
         .getResources(any(), any(), any(), queryParamsCaptor.capture(), any());
     MultiValueMap<String, String> queryParams = queryParamsCaptor.getValue();
+    assertEquals(2, queryParams.keySet().size());
     assertEquals("[" + requireCaseEvents + "]", queryParams.get("caseEvents").toString());
-    assertEquals(1, queryParams.keySet().size());
+    assertEquals("[true]", queryParams.get("validAddressOnly").toString());
   }
 
   @Test
